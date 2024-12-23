@@ -1,7 +1,7 @@
-# 🛡️ Defense Automation Script
+# 🛡️ Defense Automation Script: **Cyber Operation**
 
 ## 📄 **Purpose and Functionality**
-This Bash script is designed to automate defensive cybersecurity actions, focusing on identifying, mitigating, and logging malicious activity in network traffic. It is tailored to:
+This Bash script, `cyber_operation_script.sh`, automates defensive cybersecurity tasks, focusing on identifying, mitigating, and logging malicious activity in network traffic. It is designed to:
 - 🔍 **Monitor Suspicious Traffic**: Logs all traffic involving compromised hosts.
 - ✉️ **Analyze HTTP POST Requests**: Captures detailed packet data for potential exfiltration.
 - 🔗 **Reassemble TCP Streams**: Provides deeper insights into malicious communication.
@@ -18,18 +18,18 @@ This Bash script is designed to automate defensive cybersecurity actions, focusi
    - `iptables`
    - `dnsmasq`
    - `top`
-2. Download the script and save it as `defense_automation.sh`.
+2. Download the script and save it as `cyber_operation_script.sh`.
 
 ### **Step 2: Grant Execute Permissions**
 Run the following command to make the script executable:
 ```bash
-chmod +x defense_automation.sh
+chmod +x cyber_operation_script.sh
 ```
 
 ### **Step 3: Execute the Script**
 Run the script with superuser privileges:
 ```bash
-sudo ./defense_automation.sh
+sudo ./cyber_operation_script.sh
 ```
 
 ### **Step 4: Monitor Logs**
@@ -121,3 +121,5 @@ To stop the script and terminate background logging processes:
 - `tcp_stream_reassembly.log`: Logs reassembled TCP streams for analysis.
 - `resource_monitor.log`: Monitors CPU and memory usage anomalies.
 - `defense_report.txt`: Summarizes defensive actions taken by the script.
+
+---
