@@ -1,125 +1,164 @@
-# 🛡️ Defense Automation Script: **Cyber Operation**
+```markdown
+# Cyber Operation Automation Script
 
-## 📄 **Purpose and Functionality**
-This Bash script, `cyber_operation_script.sh`, automates defensive cybersecurity tasks, focusing on identifying, mitigating, and logging malicious activity in network traffic. It is designed to:
-- 🔍 **Monitor Suspicious Traffic**: Logs all traffic involving compromised hosts.
-- ✉️ **Analyze HTTP POST Requests**: Captures detailed packet data for potential exfiltration.
-- 🔗 **Reassemble TCP Streams**: Provides deeper insights into malicious communication.
-- 🚫 **Block Malicious IPs and Domains**: Prevents communication with attacker-controlled resources.
-- ⚙️ **Apply Rate Limiting**: Mitigates brute force attacks on critical ports.
-- 📊 **Monitor System Resources**: Detects anomalies in CPU and memory usage.
+## Overview
+This script, `cyber_operation_script.sh`, is designed to automate defensive actions against identified cyber threats. It blocks malicious IPs, domains, and limits brute-force attempts, providing logging and monitoring capabilities for further analysis.
 
 ---
 
-## 🛠️ **Instructions for Running the Script**
-### **Step 1: Preparation**
-1. Ensure you are running the script on a **Kali Linux VM** with the following tools pre-installed:
-   - `tcpdump`
-   - `iptables`
-   - `dnsmasq`
-   - `top`
-2. Download the script and save it as `cyber_operation_script.sh`.
+## Features
+- 🛡️ **Malicious IP Blocking**: Blocks known attacker-controlled IPs (e.g., `5.252.178.193` and `94.131.101.186`).
+- 🌐 **Domain Blocking**: Prevents communication with identified malicious domains (e.g., `mainsercheronlinehostingbot.com`).
+- 🚦 **Rate Limiting**: Applies rate limits on ports `80` and `443` to mitigate brute-force attempts.
+- 📊 **Traffic Logging**: Captures suspicious traffic in `/var/log/suspicious_traffic.log`.
+- 🖥️ **System Monitoring**: Logs abnormal CPU or memory usage for malware detection.
+- 📝 **Comprehensive Report**: Generates a defense report summarizing blocked activities.
 
-### **Step 2: Grant Execute Permissions**
-Run the following command to make the script executable:
+---
+
+## Prerequisites
+- **Operating System**: Kali Linux or any Linux-based distribution.
+- **Dependencies**:
+  - `iptables` for network rules.
+  - `tcpdump` for logging network traffic.
+  - `awk` for resource monitoring.
+
+---
+
+## How to Use
+
+### 1. Setup
+Grant execution permissions:
 ```bash
 chmod +x cyber_operation_script.sh
 ```
 
-### **Step 3: Execute the Script**
-Run the script with superuser privileges:
+### 2. Run the Script
+Execute with elevated permissions:
 ```bash
 sudo ./cyber_operation_script.sh
 ```
 
-### **Step 4: Monitor Logs**
-The script generates various logs for analysis. Use the following commands to monitor them in real-time:
-- **Suspicious Traffic Logs**:
+### 3. Verify Functionality
+- Check iptables rules:
+  ```bash
+  sudo iptables -L -v -n
+  ```
+- Monitor logs for blocked traffic:
   ```bash
   tail -f /var/log/suspicious_traffic.log
   ```
-- **HTTP POST Request Logs**:
+
+---
+
+## Sample Outputs
+
+### 1. **Iptables Rules**
+The script applies the following rules:
+- Blocking IPs: `5.252.178.193`, `94.131.101.186`
+- Rate-limiting ports `80` and `443`.
+
+**Command**:
+```bash
+sudo iptables -L -v -n
+```
+**Output**:
+```
+Chain INPUT (policy ACCEPT)
+pkts bytes target     prot opt in     out     source               destination
+  10   600 DROP       all  --  *      *       5.252.178.193        0.0.0.0/0
+   5   300 DROP       all  --  *      *       94.131.101.186       0.0.0.0/0
+```
+
+---
+
+### 2. **Ping and Curl Tests**
+- **Ping Test**:
   ```bash
-  tail -f /var/log/post_requests.log
+  ping 5.252.178.193
   ```
-- **TCP Stream Reassembly Logs**:
+  **Output**:
+  ```
+  PING 5.252.178.193 (5.252.178.193) 56(84) bytes of data.
+  Request timed out.
+  ```
+
+- **Curl Test**:
   ```bash
-  tail -f /var/log/tcp_stream_reassembly.log
+  curl http://5.252.178.193
+  ```
+  **Output**:
+  ```
+  curl: (7) Failed to connect to 5.252.178.193 port 80: Connection refused
   ```
 
 ---
 
-## ⚙️ **Dependencies and Prerequisites**
-1. **Environment**: The script requires a Kali Linux VM for execution.
-2. **Root Access**: Ensure you have superuser privileges to execute commands like `iptables` and `tcpdump`.
-3. **Tools**:
-   - `tcpdump`: For capturing network traffic.
-   - `iptables`: For blocking IPs and applying rate limits.
-   - `dnsmasq`: For blocking malicious domains.
-   - `top`: For monitoring system resource usage.
+### 3. **Traffic Logs**
+Traffic from malicious IPs is logged in `/var/log/suspicious_traffic.log`.
+
+**Command**:
+```bash
+tail -f /var/log/suspicious_traffic.log
+```
+**Output**:
+```
+[DATE TIME] IP 5.252.178.193 blocked by iptables.
+```
 
 ---
 
-## 📊 **Sample Output**
-The script generates the following outputs to demonstrate its effectiveness:
+### 4. **Resource Monitoring**
+Logs abnormal CPU or memory usage in `/var/log/resource_monitor.log`.
 
-### 🛡️ **1. Blocking Malicious IPs**
-- **Command**: 
-  ```bash
-  iptables -L
-  ```
-- **Description**: Displays all rules in the iptables, showing blocked IPs such as `5.252.178.193` and `94.131.101.186`.
-
----
-
-### 🔍 **2. Suspicious Traffic Monitoring**
-- **Command**:
-  ```bash
-  tail -f /var/log/suspicious_traffic.log
-  ```
-- **Description**: Real-time log showing suspicious traffic involving compromised hosts (e.g., `10.1.30.101`).
+**Command**:
+```bash
+tail -f /var/log/resource_monitor.log
+```
+**Output**:
+```
+[DATE TIME] High CPU usage detected for process ID 1234.
+```
 
 ---
 
-### ✉️ **3. HTTP POST Request Analysis**
-- **Command**:
-  ```bash
-  tail -f /var/log/post_requests.log
-  ```
-- **Description**: Captures detailed packet data for HTTP POST requests, including headers and payloads.
+## Documentation
 
----
+### Purpose and Functionality
+- Automates network defenses by blocking malicious entities and limiting brute-force attempts.
+- Provides real-time logging and monitoring for detailed analysis.
 
-### 🔗 **4. TCP Stream Reassembly**
-- **Command**:
-  ```bash
-  tail -f /var/log/tcp_stream_reassembly.log
-  ```
-- **Description**: Reassembled TCP streams providing deeper insight into malicious communications.
-
----
-
-### 📄 **5. Defense Report**
-- **File Location**: `/var/log/defense_logs/defense_report.txt`
-- **Description**: A summary report generated by the script, including blocked IPs, domain filters, rate limits, and log locations.
-
----
-
-## ❌ **Stopping the Script**
-To stop the script and terminate background logging processes:
-1. Press `Ctrl+C` in the terminal where the script is running.
-2. Alternatively, manually kill processes:
+### Instructions for Running
+1. Ensure the script has execute permissions: `chmod +x cyber_operation_script.sh`
+2. Run with:
    ```bash
-   kill $(jobs -p)
+   sudo ./cyber_operation_script.sh
    ```
 
+### Dependencies
+- **iptables**: For applying firewall rules.
+- **tcpdump**: For logging traffic.
+- **awk**: For analyzing CPU and memory usage.
+
 ---
 
-## 📁 **Log Files Overview**
-- `suspicious_traffic.log`: Logs all suspicious traffic involving compromised hosts.
-- `post_requests.log`: Captures HTTP POST request details.
-- `tcp_stream_reassembly.log`: Logs reassembled TCP streams for analysis.
-- `resource_monitor.log`: Monitors CPU and memory usage anomalies.
-- `defense_report.txt`: Summarizes defensive actions taken by the script.
+## Sample Screenshots
+
+### Combined Logs (Figure 6A, 6B, 6C)
+- **Traffic Logs**: Logs all suspicious traffic from blocked IPs.
+- **Blocked Payloads**: Reassembled TCP streams for POST requests.
+- **Resource Monitoring**: Abnormal system usage logs.
+
+**Screenshot Placeholder**:
+![image](https://github.com/user-attachments/assets/116e4b01-11fe-4613-97b9-ecb3e0421f0e)
+![image](https://github.com/user-attachments/assets/0ed6ca18-ff88-462a-b30b-98f0aae8967f)
+![image](https://github.com/user-attachments/assets/50599004-c09c-49cf-b4e3-914eac6769a3)
+
+
+---
+
+## Contribution
+Author: **Muhammad Zubair**  
+Contact: *mz23acr@herts.ac.uk*
 
 ---
